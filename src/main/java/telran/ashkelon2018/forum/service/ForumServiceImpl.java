@@ -68,11 +68,8 @@ public class ForumServiceImpl implements ForumService {
 	public Post updatePost(PostUpdateDto postUpdateDto, String token) {
 		AccountUserCredentials credentials = accountConfiguration
 				.tokenDecode(token);
-		UserAccount userAccountToken = userRepository
-				.findById(credentials.getLogin())
-				.orElseThrow(UserNotFoundException::new);
 		Post post = repository.findById(postUpdateDto.getId()).orElseThrow(PostNotFoundException::new);
-		if (!userAccountToken.getLogin().equals(post.getAuthor())) {
+		if (!credentials.getLogin().equals(post.getAuthor())) {
 			throw new ForbiddenException();
 		}
 		post.setContent(postUpdateDto.getContent());
